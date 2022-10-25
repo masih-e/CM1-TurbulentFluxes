@@ -14,24 +14,6 @@ import matplotlib as mpl
 
 sys.path.append('/glade/work/masih/Python/LES-analysis/')
 
-mpl.rcParams['figure.figsize'] = [10,10]
-mpl.rcParams['figure.titlesize'] = 11
-mpl.rcParams['figure.titleweight'] = 'bold'
-mpl.rcParams['xtick.labelsize'] = 11
-mpl.rcParams['ytick.labelsize'] = 11
-mpl.rcParams['axes.labelsize'] = 11
-mpl.rcParams['axes.titlesize'] = 11
-mpl.rcParams['lines.linewidth'] = 1.8
-mpl.rcParams['grid.linewidth'] = .25
-mpl.rcParams['figure.subplot.wspace'] = 0.05
-mpl.rcParams['figure.subplot.hspace'] = 0.05
-mpl.rcParams['legend.fontsize'] = 11
-mpl.rcParams['legend.framealpha'] = .75
-mpl.rcParams['legend.loc'] = 'best'
-mpl.rcParams['savefig.bbox'] = 'tight'
-mpl.rcParams['savefig.dpi'] = 300
-
-
 def di2(x, axis=(1, 1, 1)):
     if axis[0] == 1:
         x = (x[1:, :, :] + x[:-1, :, :])/2
