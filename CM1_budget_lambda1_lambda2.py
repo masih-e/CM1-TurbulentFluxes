@@ -1,6 +1,5 @@
 ## The script calculates the tke and t2 budgets. 
 ## The budget terms are used for calculating lambda 1 and 2 (diss. length)
-
 import matplotlib.pyplot as plt
 import sys
 import numpy as np
@@ -8,29 +7,7 @@ import xarray as xr
 from scipy.ndimage import uniform_filter
 from netCDF4 import Dataset
 import pickle
-import matplotlib as mpl
-import imp
 sys.path.append('/glade/work/masih/Python/LES-analysis/')
-import cdiff
-
-mpl.rcParams['figure.figsize'] = [10, 10]
-mpl.rcParams['figure.titlesize'] = 11
-mpl.rcParams['figure.titleweight'] = 'bold'
-mpl.rcParams['xtick.labelsize'] = 11
-mpl.rcParams['ytick.labelsize'] = 11
-mpl.rcParams['axes.labelsize'] = 11
-mpl.rcParams['axes.titlesize'] = 11
-mpl.rcParams['lines.linewidth'] = 1.8
-mpl.rcParams['grid.linewidth'] = .25
-mpl.rcParams['figure.subplot.wspace'] = 0.05
-mpl.rcParams['figure.subplot.hspace'] = 0.05
-mpl.rcParams['legend.fontsize'] = 11
-mpl.rcParams['legend.framealpha'] = .75
-mpl.rcParams['legend.loc'] = 'best'
-mpl.rcParams['savefig.bbox'] = 'tight'
-mpl.rcParams['savefig.dpi'] = 300
-
-imp.reload(cdiff)
 
 
 def di2(x, axis=(1, 1, 1)):
