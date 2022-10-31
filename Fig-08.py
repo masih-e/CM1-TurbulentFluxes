@@ -29,11 +29,8 @@ mpl.rcParams['legend.loc'] = 'best'
 mpl.rcParams['savefig.bbox'] = 'tight'
 mpl.rcParams['savefig.dpi'] = 200
 
-import cdiff
 import time
 t_start = time.time()
-import imp
-imp.reload(cdiff)
 
 def di2(x, axis=(1, 1, 1)):
     if axis[0] == 1:
@@ -56,6 +53,13 @@ casedir = {'CBL24-01': '/glade/scratch/masih/cm1/cm1r21.0_diag_wind01-2/',
 
 fig, axs = plt.subplots(2, 2, figsize=(6.5, 6), sharex=True, gridspec_kw={'wspace': .4, 'hspace': .2})
 cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
+
+def fd(dxs):
+    # function see Honnert 2011 or Ito et al. 2015
+    return ((dxs ** 2 + (7/100) * dxs ** (2/3))/(dxs ** 2 + (3/21) **  (2/3) + 3/42)) ** (3/2)
+
+xline = np.linspace(0, 5)
+yline = fd(xline)
 
 for idx, case in enumerate(['CBL24-01', 'CBL05-15', 'NBL-15', 'SBL-08']):
     if case.startswith('C'):
@@ -86,16 +90,16 @@ for idx, case in enumerate(['CBL24-01', 'CBL05-15', 'NBL-15', 'SBL-08']):
         height1 = data['zh'] / np.mean(data['zi'])*1000
         height = (height1[1:]+height1[:-1])/2
 
-        xi = np.where(data['zh']>np.mean(data['zi'])/1000)[0][0] //2
+        xi = np.where(data['zh']>np.mean(data['zi'])/1000)[0][0] // 2
         kz = np.mean(data['zi'])/2 * .4
 
         X = di2(data['tke_BP'], axis=(1, 0, 0)) + data['tke_SP'] + data['tke_adv'] + (data['tke_tur'] + data['tke_pre']) + di2(diss[1:])  # residual term (diss.)
         q2 = di2(data['tke_q2'])
         lam = np.mean(q2 ** (3/2), axis=(1, 2)) / np.mean(X, axis=(1, 2))        
         s = np.std(q2 ** (3/2), axis=(1, 2)) / np.mean(X, axis=(1, 2))
-        
+
         lt = data['lt']
-        
+
         if SIGMA == 10:
             axs[0,0].plot(DX, lam[xi]/(np.mean(lt)*1000*.1), 'o', color=cycle[idx], label=case)
         else:
@@ -107,7 +111,7 @@ for idx, case in enumerate(['CBL24-01', 'CBL05-15', 'NBL-15', 'SBL-08']):
         lah = (-np.mean(data['th2_qt2'], axis=(1, 2))/np.mean(X, axis=(1, 2)))        
         axs[0,1].plot(DX, lah[xi]/(np.mean(data['lt'])*1000*.1), 'o', color=cycle[idx])
         axs[0,1].axhline(y=10.1, linestyle=':', color='b')
-        
+
         with open('../data/l1_%.2d_%s_%d' % (timeidx, case, SIGMA), 'rb') as pk:
             data = pickle.load(pk)
 
@@ -119,15 +123,17 @@ for idx, case in enumerate(['CBL24-01', 'CBL05-15', 'NBL-15', 'SBL-08']):
         s = np.std(x, axis=(1, 2))
         for k in range(x.shape[0]):
             x[k, np.logical_or(x[k]>m[k]+s[k]*4, x[k]<m[k]-s[k]*4)]=np.nan        
-        
+
         axs[1,1].plot(DX, np.nanmean(x, axis=(1, 2))[xi]/(np.mean(lt)*1000*.1), 'o', color=cycle[idx])
         axs[1,1].axhline(y=0.74, linestyle=':', color='b')
 
+axs[0,0].plot(xline, yline * 16.6, ':k')
+
 axs[0,0].legend()
-axs[0,0].set_ylabel('$\Lambda_1/L_T$')
-axs[0,1].set_ylabel('$\Lambda_2/L_T$')
-axs[1,0].set_ylabel('$l_1/L_T$')
-axs[1,1].set_ylabel('$l_2/L_T$')
+axs[0,0].set_ylabel('$\Lambda_1/L_0$')
+axs[0,1].set_ylabel('$\Lambda_2/L_0$')
+axs[1,0].set_ylabel('$l_1/L_0$')
+axs[1,1].set_ylabel('$l_2/L_0$')
 
 axs[0, 0].set_title('a) TKE diss. length')
 axs[0, 1].set_title(r'b) <$\theta^2$> diss. length')
@@ -135,6 +141,7 @@ axs[1, 0].set_title('c) momentum redist. length')
 axs[1, 1].set_title('d) temperature redist. length')
 
 axs[0,1].set_ylim([0, 21])
+axs[0,0].set_ylim([0, axs[0,0].get_ylim[1]])
 
 axs[1,0].set_xlabel('$\Delta_H^*$')
 axs[1,1].set_xlabel('$\Delta_H^*$')

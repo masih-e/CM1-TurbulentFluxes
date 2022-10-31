@@ -28,12 +28,8 @@ mpl.rcParams['legend.loc'] = 'best'
 mpl.rcParams['savefig.bbox'] = 'tight'
 mpl.rcParams['savefig.dpi'] = 200
 
-import cdiff
 import time
 t_start = time.time()
-import imp
-imp.reload(cdiff)
-
 
 def di2(x, axis=(1, 1, 1)):
     if axis[0] == 1:
