@@ -1,3 +1,4 @@
+# Pressure temperature covariance redistribution term plots (l2)
 import matplotlib.pyplot as plt
 from datetime import datetime
 import os, sys

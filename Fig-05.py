@@ -1,3 +1,4 @@
+# Pressure momentum covariance redistribution term plots (l1)
 import matplotlib.pyplot as plt
 from datetime import datetime
 import os, sys
@@ -68,17 +69,16 @@ for idx, case in enumerate(['CBL24-01', 'CBL05-15', 'NBL-15', 'SBL-08']):
         DX = 3.125
         
     sfc = 2
-#    for SIGMA in [10, 20, 40, 80, 0]:
+
     for SIGMA in [10, 20, 40, 80, 160]:
         with open('../data/l1_%.2d_%s_%d' % (timeidx, case, SIGMA), 'rb') as pk:
             data = pickle.load(pk)
-            
+
         height1 = data['zh'] / np.mean(data['zi'])*1000
         height = (height1[1:]+height1[:-1])/2
 
         axs[idx//2, idx % 2].plot(data['l1'][sfc:], height[sfc:], label='%2.2f' % (DX * SIGMA / np.mean(data['zi'])))
         axs[idx//2, idx % 2].set_ylim([0, 1.3])
-    
 
 axs[0, 0].set_title('a) 1 m $s^{-1}$; 0.24 K m $s^{-1}$')
 axs[0, 1].set_title('b) 15 m $s^{-1}$; 0.05 K m $s^{-1}$')

@@ -1,3 +1,4 @@
+# Summary plot with all the length scales; MY values (blue line) and Honnert 2011 similarity Eq. 
 import matplotlib.pyplot as plt
 from datetime import datetime
 import os, sys
@@ -141,7 +142,7 @@ axs[1, 0].set_title('c) momentum redist. length')
 axs[1, 1].set_title('d) temperature redist. length')
 
 axs[0,1].set_ylim([0, 21])
-axs[0,0].set_ylim([0, axs[0,0].get_ylim[1]])
+axs[0,0].set_ylim([0, axs[0,0].get_ylim()[1]])
 
 axs[1,0].set_xlabel('$\Delta_H^*$')
 axs[1,1].set_xlabel('$\Delta_H^*$')

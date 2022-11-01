@@ -1,3 +1,4 @@
+# Temperature variance dissipation length (lambda 2)
 import matplotlib.pyplot as plt
 from datetime import datetime
 import os, sys
@@ -69,12 +70,11 @@ for idx, case in enumerate(['CBL24-01', 'CBL05-15', 'NBL-15', 'SBL-08']):
         with open('../data/bud_%.2d_%s_%d' % (timeidx, case, SIGMA), 'rb') as pk:
             data = pickle.load(pk)
 
-
         rdir = casedir[case]
         with Dataset(rdir + 'cm1out_0000%.2d.nc' % timeidx) as ds:
             diss = ds.variables['dissten'][0,:]
             xf = ds['xf'][:]
-            
+
             if SIGMA == 0:
                 DX = np.mean(np.diff(xf)) * 1000 * xf.shape[0]
             else:
@@ -82,10 +82,10 @@ for idx, case in enumerate(['CBL24-01', 'CBL05-15', 'NBL-15', 'SBL-08']):
 
         height1 = data['zh'] / np.mean(data['zi'])*1000
         height = (height1[1:]+height1[:-1])/2
-                        
+        q = di2(np.sqrt(data['tke_q2']), axis=(1, 1, 1))
 #        X = -(data['th2_adv']+data['th2_tur']+data['th2_pro']/2)
         X = -(data['th2_pro']/2)
-        axs[idx//2, idx % 2].plot((-np.mean(data['th2_qt2'], axis=(1, 2))/np.mean(X, axis=(1, 2)))[sfc:], height[sfc:], label='%2.2f' % (DX / np.mean(data['zi'])))
+        axs[idx//2, idx % 2].plot((-np.mean(q*data['th2_t2'], axis=(1, 2))/np.mean(X, axis=(1, 2)))[sfc:], height[sfc:], label='%2.2f' % (DX / np.mean(data['zi'])))
         axs[idx//2, idx % 2].set_ylim([0, 1.3])
             
 
